@@ -1,0 +1,46 @@
+name: Validate feature branch commits
+on:
+  push:
+    branches:
+      - 'feature/*'
+jobs:
+  lint:
+    name: Run Linters
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Run Reusable Setup
+        uses: ./.github/actions/setup
+
+      - name: Run lint checks
+        run: npm run lint
+
+  test:
+    name: Run Unit Tests
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Run Reusable Setup
+        uses: ./.github/actions/setup
+
+      - name: Run tests
+        run: npm run test
+
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Run Reusable Setup
+        uses: ./.github/actions/setup
+
+      - name: Run build
+        run: npm run build

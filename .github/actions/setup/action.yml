@@ -1,0 +1,13 @@
+name: "Reusable Setup"
+description: "Checkout repository, set up Node.js and install dependencies"
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+
+    - name: Install dependencies
+      run: npm install
+      shell: bash

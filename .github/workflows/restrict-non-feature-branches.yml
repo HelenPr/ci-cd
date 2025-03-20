@@ -1,0 +1,14 @@
+name: Allow development in the feature/<feature_name> branches only
+on: [push, pull_request]
+jobs:
+  validate-branch-name:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if branch name follows feature/<feature_name> pattern
+        run: |
+          BRANCH_NAME="${{ github.head_ref || github.ref_name }}"
+
+          if [[ ! "$BRANCH_NAME" =~ ^feature/ ]]; then
+            echo "Development is only allowed in feature/<feature_name> branches!"
+            exit 1
+          fi
