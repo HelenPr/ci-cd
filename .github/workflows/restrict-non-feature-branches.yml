@@ -6,9 +6,31 @@ jobs:
     steps:
       - name: Check if branch name follows feature/<feature_name> pattern
         run: |
-          BRANCH_NAME="${{ github.head_ref || github.ref_name }}"
+          EVENT_NAME="${{ github.event_name }}"
 
-          if [[ ! "$BRANCH_NAME" =~ ^feature/ ]]; then
-            echo "Development is only allowed in feature/<feature_name> branches!"
-            exit 1
+          if [[ "$EVENT_NAME" == "pull_request" ]]; then
+            SRC_BRANCH_NAME="${{ github.head_ref }}"
+            TARGET_BRANCH_NAME="${{ github.base_ref }}"
+
+            if [[ ! "$SRC_BRANCH_NAME" =~ ^feature/ ]]; then
+              echo "Pull request source branch does not follow 'feature/<feature_name>' naming!"
+              exit 1
+            fi
+
+            if [[ ! "$TARGET_BRANCH_NAME" =~ ^feature/ ]] && [[ "$TARGET_BRANCH_NAME" != "main" ]]; then
+              echo "Pull request source branch does not follow 'feature/<feature_name>' naming!"
+              exit 1
+            fi
+
+            echo "Pull request allowed from feature/<feature_name> branch."
+            exit 0
+          fi
+
+          if [[ "$EVENT_NAME" == "push" ]]; then
+            if [[ ! "${{ github.ref_name }}" =~ ^feature/ ]]; then
+              echo "Development is only allowed in feature/<feature_name> branches!"
+              exit 1
+            fi
+              echo "Push event allowed for feature/<feature_name> branch."
+              exit 0
           fi
