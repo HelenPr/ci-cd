@@ -27,7 +27,7 @@ jobs:
           fi
 
           if [[ "$EVENT_NAME" == "push" ]]; then
-            if [[ ! "${{ github.ref_name }}" =~ ^feature/ ]]; then
+            if [[ ! "${{ github.ref_name }}" =~ ^feature/ ]] && [[ "${{ github.ref_name }}" != "main" ]]; then
               echo "Development is only allowed in feature/<feature_name> branches!"
               exit 1
             fi
