@@ -1,0 +1,11 @@
+name: Pull Request Validation
+
+on:
+  pull_request:
+    branches:
+      - 'main'
+      - 'feature/*'
+
+jobs:
+  call-validation:
+    uses: ./.github/workflows/validate-commit.yml

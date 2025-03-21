@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - 'feature/*'
+  workflow_call:
+
 jobs:
   lint:
     name: Run Linters
